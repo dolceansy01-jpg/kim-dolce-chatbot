@@ -2,14 +2,23 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090909">
 
-  <title>KIM DOLCE AI</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#070707"
+  >
+
   <meta
     name="description"
-    content="KIM DOLCE AI — Assistant intelligent en créole haïtien, français et anglais."
+    content="KIM DOLCE AI — Assistant intelligent en français, créole haïtien et anglais."
   >
+
+  <title>KIM DOLCE AI</title>
 
   <link rel="stylesheet" href="/style.css">
 </head>
@@ -20,16 +29,26 @@
 
     <!-- HEADER -->
     <header class="header">
+
       <div class="brand">
-        <div class="logo">KD</div>
+
+        <div class="logo">
+          KD
+        </div>
 
         <div class="brand-info">
-          <h1>KIM DOLCE AI</h1>
+
+          <h1>
+            KIM DOLCE AI
+          </h1>
+
           <span>
             <i class="online-dot"></i>
             Assistant en ligne
           </span>
+
         </div>
+
       </div>
 
       <button
@@ -40,34 +59,60 @@
       >
         ＋
       </button>
+
     </header>
 
+
     <!-- CHAT -->
-    <main id="chat" class="chat">
+    <main
+      id="chat"
+      class="chat"
+    >
 
       <!-- WELCOME -->
-      <section id="welcome" class="welcome">
+      <section
+        id="welcome"
+        class="welcome"
+      >
 
-        <div class="welcome-logo">KD</div>
+        <div class="welcome-logo">
+          KD
+        </div>
 
-        <h2>Bienvenue 👋🏽</h2>
+        <h2>
+          Bienvenue 👋🏽
+        </h2>
 
         <p>
-          Je suis <strong>KIM DOLCE AI</strong>, ton assistant intelligent.
-          Tu peux me parler en créole haïtien, français ou anglais.
+          Je suis
+          <strong>KIM DOLCE AI</strong>,
+          ton assistant intelligent.
+          Tu peux me parler en créole haïtien,
+          français ou anglais.
         </p>
 
+
+        <!-- SUGGESTIONS -->
         <div class="suggestions">
 
-          <button class="suggestion" type="button">
+          <button
+            class="suggestion"
+            type="button"
+          >
             🇭🇹 Parle-moi en créole haïtien
           </button>
 
-          <button class="suggestion" type="button">
+          <button
+            class="suggestion"
+            type="button"
+          >
             🇫🇷 Aide-moi en français
           </button>
 
-          <button class="suggestion" type="button">
+          <button
+            class="suggestion"
+            type="button"
+          >
             💻 Aide-moi avec mon projet
           </button>
 
@@ -77,22 +122,54 @@
 
     </main>
 
+
     <!-- TYPING -->
-    <div id="typing" class="typing hidden">
-      <div class="typing-avatar">KD</div>
+    <div
+      id="typing"
+      class="typing hidden"
+    >
+
+      <div class="typing-avatar">
+        KD
+      </div>
 
       <div class="typing-bubble">
+
         <span></span>
         <span></span>
         <span></span>
+
       </div>
+
     </div>
 
-    <!-- INPUT -->
+
+    <!-- COMPOSER -->
     <footer class="composer">
 
       <div class="input-container">
 
+        <!-- PHOTO BUTTON -->
+        <button
+          id="photoBtn"
+          class="photo-btn"
+          type="button"
+          title="Envoyer une photo"
+          aria-label="Envoyer une photo"
+        >
+          📷
+        </button>
+
+        <!-- HIDDEN FILE INPUT -->
+        <input
+          id="photoInput"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          hidden
+        >
+
+        <!-- MESSAGE -->
         <textarea
           id="messageInput"
           rows="1"
@@ -101,6 +178,7 @@
           autocomplete="off"
         ></textarea>
 
+        <!-- SEND -->
         <button
           id="sendBtn"
           class="send-btn"
@@ -113,15 +191,45 @@
 
       </div>
 
+
+      <!-- SELECTED PHOTO PREVIEW -->
+      <div
+        id="photoPreview"
+        class="photo-preview"
+        style="display:none;"
+      >
+
+        <img
+          id="previewImage"
+          alt="Aperçu de la photo"
+        >
+
+        <button
+          id="removePhotoBtn"
+          type="button"
+          title="Supprimer la photo"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
       <p class="disclaimer">
-        KIM DOLCE AI peut parfois faire des erreurs. Vérifie les informations importantes.
+        KIM DOLCE AI peut parfois faire des erreurs.
+        Vérifie les informations importantes.
       </p>
 
     </footer>
 
   </div>
 
-  <script src="/app.js"></script>
+
+  <!-- FIREBASE + CHAT APPLICATION -->
+  <script
+    type="module"
+    src="/app.js"
+  ></script>
 
 </body>
-</html>
+        </html>
