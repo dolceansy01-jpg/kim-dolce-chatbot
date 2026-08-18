@@ -10,6 +10,11 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
+
+/* =========================
+   FIREBASE
+========================= */
+
 const firebaseConfig = {
   apiKey: "AIzaSyC3A-d31HodRfAdLbXv21tR0Kb4pEuEWP4",
   authDomain: "kim-dolce-ai.firebaseapp.com",
@@ -20,25 +25,47 @@ const firebaseConfig = {
   measurementId: "G-M4VTFERJJ3"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const firebaseApp = initializeApp(firebaseConfig);
+
+const auth = getAuth(firebaseApp);
+
 const provider = new GoogleAuthProvider();
+
+
+/* =========================
+   ELEMENTS
+========================= */
 
 const chat = document.getElementById("chat");
 const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 const typing = document.getElementById("typing");
 const newChatBtn = document.getElementById("newChatBtn");
+
+const photoBtn = document.getElementById("photoBtn");
+const photoInput = document.getElementById("photoInput");
+const photoPreview = document.getElementById("photoPreview");
+const previewImage = document.getElementById("previewImage");
+const removePhotoBtn = document.getElementById("removePhotoBtn");
+
 const welcome = document.getElementById("welcome");
 
-let currentUser = null;
-let messages = [];
 
 /* =========================
-   GOOGLE LOGIN UI
+   STATE
+========================= */
+
+let currentUser = null;
+let selectedImage = null;
+let messages = [];
+
+
+/* =========================
+   GOOGLE LOGIN SCREEN
 ========================= */
 
 function createLoginScreen() {
+
   document.body.innerHTML = `
     <div style="
       min-height:100vh;
@@ -50,6 +77,7 @@ function createLoginScreen() {
       font-family:Arial,sans-serif;
       padding:20px;
     ">
+
       <div style="
         width:100%;
         max-width:420px;
@@ -117,44 +145,65 @@ function createLoginScreen() {
     .addEventListener("click", loginWithGoogle);
 }
 
+
 /* =========================
    GOOGLE LOGIN
 ========================= */
 
 async function loginWithGoogle() {
-  const button = document.getElementById("googleLoginBtn");
-  const errorBox = document.getElementById("loginError");
+
+  const button =
+    document.getElementById("googleLoginBtn");
+
+  const errorBox =
+    document.getElementById("loginError");
 
   button.disabled = true;
+
   button.textContent = "Connexion...";
 
   try {
-    await signInWithPopup(auth, provider);
+
+    await signInWithPopup(
+      auth,
+      provider
+    );
+
   } catch (error) {
+
     console.error(error);
 
     errorBox.textContent =
-      "Connexion impossible. Vérifie que Google Sign-In est activé dans Firebase.";
+      "Connexion impossible. Vérifie que Google est activé dans Firebase.";
 
     button.disabled = false;
-    button.textContent = "🔵 Continuer avec Google";
+
+    button.textContent =
+      "🔵 Continuer avec Google";
   }
 }
 
+
 /* =========================
-   LOGOUT BUTTON
+   USER MENU
 ========================= */
 
 function addUserMenu() {
-  const header = document.querySelector(".header");
+
+  const header =
+    document.querySelector(".header");
 
   if (!header || !currentUser) return;
 
-  const existing = document.getElementById("userMenu");
+  const oldMenu =
+    document.getElementById("userMenu");
 
-  if (existing) existing.remove();
+  if (oldMenu) {
+    oldMenu.remove();
+  }
 
-  const menu = document.createElement("div");
+  const menu =
+    document.createElement("div");
 
   menu.id = "userMenu";
 
@@ -166,13 +215,16 @@ function addUserMenu() {
     margin-right:10px;
   `;
 
-  const avatar = document.createElement("img");
+  const avatar =
+    document.createElement("img");
 
   avatar.src =
     currentUser.photoURL ||
     "https://www.gravatar.com/avatar/?d=mp";
 
-  avatar.alt = currentUser.displayName || "Utilisateur";
+  avatar.alt =
+    currentUser.displayName ||
+    "Utilisateur";
 
   avatar.style.cssText = `
     width:38px;
@@ -181,9 +233,11 @@ function addUserMenu() {
     object-fit:cover;
   `;
 
-  const logout = document.createElement("button");
+  const logout =
+    document.createElement("button");
 
-  logout.textContent = "Déconnexion";
+  logout.textContent =
+    "Déconnexion";
 
   logout.style.cssText = `
     padding:9px 12px;
@@ -195,51 +249,119 @@ function addUserMenu() {
     font-size:12px;
   `;
 
-  logout.addEventListener("click", async () => {
-    await signOut(auth);
-  });
+  logout.addEventListener(
+    "click",
+    async () => {
+
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error(error);
+      }
+
+    }
+  );
 
   menu.appendChild(avatar);
   menu.appendChild(logout);
 
-  header.insertBefore(menu, header.lastElementChild);
+  header.insertBefore(
+    menu,
+    header.lastElementChild
+  );
 }
+
 
 /* =========================
    TIME
 ========================= */
 
 function getTime() {
-  return new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+
+  return new Date().toLocaleTimeString(
+    [],
+    {
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
 }
+
 
 /* =========================
    ADD MESSAGE
 ========================= */
 
-function addMessage(text, type) {
+function addMessage(
+  text,
+  type,
+  image = null
+) {
+
   if (welcome) {
     welcome.style.display = "none";
   }
 
-  const message = document.createElement("div");
+  const message =
+    document.createElement("div");
 
-  message.className = `message ${type}`;
+  message.className =
+    `message ${type}`;
 
-  const content = document.createElement("div");
+  const content =
+    document.createElement("div");
 
-  content.className = "message-content";
+  content.className =
+    "message-content";
 
-  content.textContent = text;
 
-  const time = document.createElement("span");
+  /* IMAGE */
 
-  time.className = "message-time";
+  if (image) {
 
-  time.textContent = getTime();
+    const img =
+      document.createElement("img");
+
+    img.src = image;
+
+    img.alt = "Photo envoyée";
+
+    img.style.cssText = `
+      max-width:100%;
+      max-height:300px;
+      border-radius:12px;
+      display:block;
+      margin-bottom:8px;
+      object-fit:contain;
+    `;
+
+    content.appendChild(img);
+  }
+
+
+  /* TEXT */
+
+  if (text) {
+
+    const textNode =
+      document.createElement("div");
+
+    textNode.textContent = text;
+
+    content.appendChild(textNode);
+  }
+
+
+  /* TIME */
+
+  const time =
+    document.createElement("span");
+
+  time.className =
+    "message-time";
+
+  time.textContent =
+    getTime();
 
   content.appendChild(time);
 
@@ -247,97 +369,315 @@ function addMessage(text, type) {
 
   chat.appendChild(message);
 
-  chat.scrollTop = chat.scrollHeight;
+  chat.scrollTop =
+    chat.scrollHeight;
+
 
   messages.push({
-    role: type === "user" ? "user" : "assistant",
-    content: text
+    role:
+      type === "user"
+        ? "user"
+        : "assistant",
+
+    content: text || "",
+
+    image:
+      image || null
   });
 }
+
 
 /* =========================
    TYPING
 ========================= */
 
 function showTyping() {
-  typing.classList.remove("hidden");
 
-  chat.scrollTop = chat.scrollHeight;
+  if (!typing) return;
+
+  typing.classList.remove(
+    "hidden"
+  );
 }
 
 function hideTyping() {
-  typing.classList.add("hidden");
+
+  if (!typing) return;
+
+  typing.classList.add(
+    "hidden"
+  );
 }
+
+
+/* =========================
+   PHOTO → BASE64
+========================= */
+
+function fileToBase64(file) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+      reader.onload = () =>
+        resolve(reader.result);
+
+      reader.onerror = reject;
+
+      reader.readAsDataURL(file);
+    }
+  );
+}
+
+
+/* =========================
+   PHOTO SELECT
+========================= */
+
+if (photoBtn && photoInput) {
+
+  photoBtn.addEventListener(
+    "click",
+    () => {
+
+      photoInput.click();
+
+    }
+  );
+
+
+  photoInput.addEventListener(
+    "change",
+    async () => {
+
+      const file =
+        photoInput.files?.[0];
+
+      if (!file) return;
+
+
+      if (!file.type.startsWith("image/")) {
+
+        alert(
+          "Veuillez sélectionner une image."
+        );
+
+        return;
+      }
+
+
+      if (file.size > 7 * 1024 * 1024) {
+
+        alert(
+          "L'image est trop grande. Maximum 7 MB."
+        );
+
+        photoInput.value = "";
+
+        return;
+      }
+
+
+      try {
+
+        selectedImage =
+          await fileToBase64(file);
+
+        previewImage.src =
+          selectedImage;
+
+        photoPreview.style.display =
+          "flex";
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Impossible de charger la photo."
+        );
+      }
+    }
+  );
+}
+
+
+/* =========================
+   REMOVE PHOTO
+========================= */
+
+if (removePhotoBtn) {
+
+  removePhotoBtn.addEventListener(
+    "click",
+    () => {
+
+      selectedImage = null;
+
+      photoInput.value = "";
+
+      previewImage.src = "";
+
+      photoPreview.style.display =
+        "none";
+    }
+  );
+}
+
 
 /* =========================
    SEND MESSAGE
 ========================= */
 
 async function sendMessage() {
-  const message = messageInput.value.trim();
 
-  if (!message || !currentUser) return;
+  const message =
+    messageInput.value.trim();
 
-  addMessage(message, "user");
+  if (
+    !message &&
+    !selectedImage
+  ) {
+    return;
+  }
+
+  if (!currentUser) {
+    return;
+  }
+
+
+  const imageToSend =
+    selectedImage;
+
+
+  /* SHOW USER MESSAGE */
+
+  addMessage(
+    message ||
+      "📷 Analyse cette photo.",
+    "user",
+    imageToSend
+  );
+
+
+  /* CLEAR INPUT */
 
   messageInput.value = "";
 
-  messageInput.style.height = "auto";
+  messageInput.style.height =
+    "auto";
+
+
+  selectedImage = null;
+
+  if (photoInput) {
+    photoInput.value = "";
+  }
+
+  if (photoPreview) {
+    photoPreview.style.display =
+      "none";
+  }
+
 
   sendBtn.disabled = true;
 
   showTyping();
 
+
   try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+    const response =
+      await fetch(
+        "/api/chat",
+        {
+          method: "POST",
 
-      body: JSON.stringify({
-        message: message,
-        userId: currentUser.uid
-      })
-    });
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-    const data = await response.json();
+          body: JSON.stringify({
+            message:
+              message ||
+              "Analyse cette photo et explique-moi ce que tu vois.",
+
+            image:
+              imageToSend,
+
+            userId:
+              currentUser.uid
+          })
+        }
+      );
+
+
+    const data =
+      await response.json();
+
 
     hideTyping();
 
+
     if (!response.ok) {
+
       throw new Error(
-        data.error || "Erreur serveur"
+        data.error ||
+        "Erreur serveur"
       );
     }
 
-    addMessage(data.reply, "ai");
+
+    addMessage(
+      data.reply,
+      "ai"
+    );
+
 
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "CHAT ERROR:",
+      error
+    );
 
     hideTyping();
 
     addMessage(
-      "Désolé, le service AI est momentanément indisponible.",
+      "Désolé, je ne peux pas traiter cette demande pour le moment.",
       "ai"
     );
 
+
   } finally {
+
     sendBtn.disabled = false;
 
     messageInput.focus();
   }
 }
 
+
 /* =========================
-   EVENTS
+   SEND BUTTON
 ========================= */
 
 if (sendBtn) {
-  sendBtn.addEventListener("click", sendMessage);
+
+  sendBtn.addEventListener(
+    "click",
+    sendMessage
+  );
 }
+
+
+/* =========================
+   ENTER KEY
+========================= */
 
 if (messageInput) {
 
@@ -349,18 +689,22 @@ if (messageInput) {
         event.key === "Enter" &&
         !event.shiftKey
       ) {
+
         event.preventDefault();
 
         sendMessage();
       }
+
     }
   );
+
 
   messageInput.addEventListener(
     "input",
     () => {
 
-      messageInput.style.height = "auto";
+      messageInput.style.height =
+        "auto";
 
       messageInput.style.height =
         Math.min(
@@ -370,6 +714,7 @@ if (messageInput) {
     }
   );
 }
+
 
 /* =========================
    NEW CHAT
@@ -385,40 +730,37 @@ if (newChatBtn) {
 
       if (welcome) {
 
-        chat.appendChild(welcome);
+        chat.appendChild(
+          welcome
+        );
 
-        welcome.style.display = "block";
+        welcome.style.display =
+          "block";
       }
 
       messages = [];
 
       messageInput.value = "";
 
-      messageInput.style.height = "auto";
+      messageInput.style.height =
+        "auto";
+
+      selectedImage = null;
+
+      if (photoInput) {
+        photoInput.value = "";
+      }
+
+      if (photoPreview) {
+        photoPreview.style.display =
+          "none";
+      }
 
       messageInput.focus();
     }
   );
 }
 
-/* =========================
-   FIREBASE AUTH STATE
-========================= */
-
-onAuthStateChanged(auth, (user) => {
-
-  currentUser = user;
-
-  if (!user) {
-
-    createLoginScreen();
-
-    return;
-  }
-
-  location.reload();
-
-});
 
 /* =========================
    SUGGESTIONS
@@ -426,21 +768,54 @@ onAuthStateChanged(auth, (user) => {
 
 document
   .querySelectorAll(".suggestion")
-  .forEach((button) => {
+  .forEach(
+    (button) => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        messageInput.value =
-          button.textContent.trim();
+          messageInput.value =
+            button.textContent.trim();
 
-        messageInput.focus();
+          messageInput.focus();
 
-        messageInput.dispatchEvent(
-          new Event("input")
-        );
-      }
+          messageInput.dispatchEvent(
+            new Event("input")
+          );
+        }
+      );
+
+    }
+  );
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+onAuthStateChanged(
+  auth,
+  (user) => {
+
+    currentUser = user;
+
+
+    if (!user) {
+
+      createLoginScreen();
+
+      return;
+    }
+
+
+    addUserMenu();
+
+    console.log(
+      "KIM DOLCE AI connecté:",
+      user.displayName
     );
 
-  });
+    messageInput?.focus();
+  }
+);
