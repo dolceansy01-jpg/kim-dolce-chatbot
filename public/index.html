@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090909">
+
+  <title>KIM DOLCE AI</title>
+  <meta
+    name="description"
+    content="KIM DOLCE AI — Assistant intelligent en créole haïtien, français et anglais."
+  >
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo">KD</div>
+
+        <div class="brand-info">
+          <h1>KIM DOLCE AI</h1>
+          <span>
+            <i class="online-dot"></i>
+            Assistant en ligne
+          </span>
+        </div>
+      </div>
+
+      <button
+        id="newChatBtn"
+        class="header-btn"
+        type="button"
+        title="Nouvelle conversation"
+      >
+        ＋
+      </button>
+    </header>
+
+    <!-- CHAT -->
+    <main id="chat" class="chat">
+
+      <!-- WELCOME -->
+      <section id="welcome" class="welcome">
+
+        <div class="welcome-logo">KD</div>
+
+        <h2>Bienvenue 👋🏽</h2>
+
+        <p>
+          Je suis <strong>KIM DOLCE AI</strong>, ton assistant intelligent.
+          Tu peux me parler en créole haïtien, français ou anglais.
+        </p>
+
+        <div class="suggestions">
+
+          <button class="suggestion" type="button">
+            🇭🇹 Parle-moi en créole haïtien
+          </button>
+
+          <button class="suggestion" type="button">
+            🇫🇷 Aide-moi en français
+          </button>
+
+          <button class="suggestion" type="button">
+            💻 Aide-moi avec mon projet
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- TYPING -->
+    <div id="typing" class="typing hidden">
+      <div class="typing-avatar">KD</div>
+
+      <div class="typing-bubble">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <footer class="composer">
+
+      <div class="input-container">
+
+        <textarea
+          id="messageInput"
+          rows="1"
+          maxlength="4000"
+          placeholder="Écris ton message..."
+          autocomplete="off"
+        ></textarea>
+
+        <button
+          id="sendBtn"
+          class="send-btn"
+          type="button"
+          aria-label="Envoyer"
+          title="Envoyer"
+        >
+          ➤
+        </button>
+
+      </div>
+
+      <p class="disclaimer">
+        KIM DOLCE AI peut parfois faire des erreurs. Vérifie les informations importantes.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script src="/app.js"></script>
+
+</body>
+</html>
